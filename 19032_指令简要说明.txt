@@ -1,0 +1,70 @@
+所有指令后面要加换行符
+
+SAFE:STOP
+停止测试
+
+SAFE:STAR
+启动测试
+
+SAFE:STAT?
+  STOPPED
+询问目前装置的执行状态：RUNNINT|STOPPED
+
+SAFE:SNUM?
+  +2
+查询已设定了多少个 STEP
+
+SAFE:RES:ALL:OMET?
+  +3.002000E+03,+5.000000E+02
+询问所有 STEP 的 OUTPUT METER 的值
+
+SAFE:RES:ALL:MMET?
+  +2.680000E-03,+9.900000E+37
+询问所有 STEP 的 MEASURE METER 的值
+
+SAFE:RES:ALL:MODE?
+  AC,IR
+询问所有 STEP 的 MODE
+
+SAFE:RES:ALL:TIME?
+  +3.000000E+01,+3.000000E+01
+询问所有 STEP 的测试时间（30s,30s）
+
+SAFE:RES:ALL?
+  116,116
+询问所有 STEP 的判断结果（回传116表示该 STEP PASS）
+
+SAFE:RES:AREP ON/OFF
+  "PASS"
+测试完成之后是否自动回复测试结果（所有项目测试成功回复 PASS）
+
+SAFE:RES:AREP ON
+SAFE:RES:AREP:ITEM STAT,MODE,OMET,MMET
+SAFE:STOP
+SAFE:STAR
+  AC,+3.002000E+03,+2.680000E-03,116,IR,+5.000000E+02,+9.900000E+37,116
+设定自动回传的数据（参数设定无需按照顺序，但资料会依照先后顺序回报）
+
+SOUR:SAFE:RES:ASAV ON
+下次开机后，仍有自动回报功能
+
+SAFE:STEP 1:DEL
+清楚主机内存中 STEP 1 的设定值
+
+SAFE:STEP 1:AC 3000
+设定 STEP 1 交流耐压测试时所需的电压值为 3000V（发完这条命令之后，屏幕会实时显示已设值）
+
+SAFE:STEP 1:AC:TIME 10
+设定 STEP 1 的测试时间为 10s
+
+SAFE:STEP 2:IR 300
+设定 STEP 2 绝缘电阻测试时所需的电压值为 300V
+
+SAFE:STEP 2:IR:TIME 15
+设定 STEP 2 绝缘电阻测试的时间为 15s
+
+SAFE:PRES:TIME:STEP 0.5
+设定 STEP 之间的时间间隔为 0.5s
+
+
+
