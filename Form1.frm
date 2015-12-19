@@ -210,13 +210,10 @@ Private Sub MSComm1_OnComm()
 On Error GoTo Err
     Select Case MSComm1.CommEvent
         Case comEvReceive
-            Log_Info "Before delay----"
             DelayMS 500
-            Log_Info "After delay----"
             strCommInput = MSComm1.Input
             Call textReceive
         'Case comEvSend
-        Case Else
     End Select
 Err:
     'MsgBox "MSComm1_OnComm Error"
@@ -252,7 +249,7 @@ FAIL:
     Exit Sub
 
 Err:
-    Log_Info "Unknown command"
+    Log_Info "Unknown message"
 End Sub
 
 Private Sub tbSetComPort_Click()
