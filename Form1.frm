@@ -5,11 +5,19 @@ Begin VB.Form Form1
    ClientHeight    =   7215
    ClientLeft      =   165
    ClientTop       =   855
-   ClientWidth     =   5565
+   ClientWidth     =   7200
    LinkTopic       =   "Form1"
    ScaleHeight     =   7215
-   ScaleWidth      =   5565
+   ScaleWidth      =   7200
    StartUpPosition =   3  '´°¿ÚÈ±Ê¡
+   Begin VB.CommandButton Command1 
+      Caption         =   "writeExcel"
+      Height          =   495
+      Left            =   5640
+      TabIndex        =   6
+      Top             =   1080
+      Width           =   1335
+   End
    Begin VB.Timer Timer1 
       Left            =   6480
       Top             =   360
@@ -129,8 +137,59 @@ Option Explicit
 
 Dim strCommInput As String
 
+Private Sub Command1_Click()
+    Dim rs As New ADODB.Recordset
+    Dim i, j, cnt As Integer
+    Dim exl As Object
+    Dim wb As Object
+    Dim sht As Object
+    Dim cn As New ADODB.Connection
+    Dim t1, t2, t As Date
+    
+    t1 = Now
+    
+    rs.Fields.Append "R", adInteger
+    rs.Fields.Append "G", adInteger
+    rs.Fields.Append "B", adInteger
+    
+    Set exl = CreateObject("Excel.Application")
+    Set wb = exl.Workbooks.Add
+    Set sht = wb.ActiveSheet
+    
+    sht.Cells(1, 1) = "R"
+    sht.Cells(1, 2) = "G"
+    sht.Cells(1, 3) = "B"
+    
+    cnt = 0
+    rs.Open
+    For i = 0 To 10
+        rs.AddNew
+        For j = 0 To 2
+            rs(j) = cnt
+            cnt = cnt + 1
+        Next j
+        
+        rs.Update
+    Next i
+    
+    sht.Cells(2, 1).CopyFromRecordset rs
+    
+    rs.Close
+    Set rs = Nothing
+    
+    exl.ActiveWorkbook.SaveAs App.path & "\sample2.xls"
+    exl.ActiveWorkbook.Close
+    exl.Quit
+    
+    t2 = Now
+    
+    t = t2 - t1
+    
+    MsgBox Second(t)
+End Sub
+
 Private Sub Form_Load()
-    SetTVCurrentComBaud = 9600
+    setTVCurrentComBaud = 9600
     subInitComPort
     subInitInterface
 
@@ -149,7 +208,7 @@ On Error GoTo ErrExit
 Exit Sub
 
 ErrExit:
-        MsgBox Err.Description, vbCritical, Err.Source
+    MsgBox Err.Description, vbCritical, Err.Source
 End Sub
 
 Private Sub subInitComPort()
@@ -157,7 +216,7 @@ Private Sub subInitComPort()
     Executesql (sqlstring)
 
     If rs.EOF = False Then
-        SetTVCurrentComID = rs("ComID")
+        setTVCurrentComID = rs("ComID")
     Else
         MsgBox "Read Data Error,Please Check Your Database!", vbOKOnly + vbInformation, "Warning!"
     End

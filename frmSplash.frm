@@ -156,9 +156,9 @@ On Error GoTo ErrExit
     If rs.EOF = False Then
         strCurrentModelName = rs("CurrentModelName")
         strDataVersion = rs("DataVersion")
-        SetTVCurrentComID = rs("ComID")
-        SetData = rs("Date")
-        SetDay = rs("Day")
+        setTVCurrentComID = rs("ComID")
+        setData = rs("Date")
+        setDay = rs("Day")
     Else
         MsgBox "Read Data Error,Please Check Your Database!", vbOKOnly + vbInformation, "Warning!"
     End If
@@ -169,11 +169,11 @@ On Error GoTo ErrExit
     sqlstring = ""
     cmbModelName = strCurrentModelName
 
-    If SetData <> Day(Date) Then
+    If setData <> Day(Date) Then
         sqlstring = "select * from CommonTable where Mark='ATS'"
         Executesql (sqlstring)
         rs.Fields(4) = Day(Date)
-        rs.Fields(5) = SetDay + 1
+        rs.Fields(5) = setDay + 1
         rs.Update
 
         Set cn = Nothing
@@ -203,7 +203,7 @@ On Error GoTo ErrExit
     sqlstring = "select * from settingTable where Mark='" & strCurrentModelName & "'"
     Executesql (sqlstring)
 
-    SetTVCurrentComBaud = rs("ComBaud")
+    setTVCurrentComBaud = rs("ComBaud")
 
     Set rs = Nothing
     Set cn = Nothing

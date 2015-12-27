@@ -3,13 +3,14 @@ Option Explicit
 
 
 Public strCurrentModelName As String
-Public SetTVCurrentComBaud As Long
+Public setTVCurrentComBaud As Long
 Public strDataVersion As String
 Public strSerialNo As String
 
-Public SetTVCurrentComID As Integer
-Public SetData As Integer
-Public SetDay As Integer
+Public setTVCurrentComID As Integer
+Public setData As Integer
+Public setDay As Integer
+Public stepNum As Integer
 
 Public Sub Log_Clear()
     Form1.txtReceive.Text = ""

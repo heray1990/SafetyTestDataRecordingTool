@@ -1,6 +1,9 @@
 Attribute VB_Name = "Module4"
 Option Explicit
 
+'The end code of command for Chroma 19032 is vbLF or vbCrLf.
+'About the detail of command for 19032, please see its user manual.
+
 Dim cmdBuf As String
 
 Public Sub SAFE_STAR()
