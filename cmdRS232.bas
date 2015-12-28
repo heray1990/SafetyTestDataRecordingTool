@@ -45,3 +45,11 @@ Public Sub ASK_STEP_SNUM()
     Form1.MSComm1.Output = cmdBuf & vbCrLf
     Log_Info cmdBuf
 End Sub
+
+Public Sub ASK_ALL_STEP_NAME()
+    cmdBuf = "SAFE:RES:ALL:MODE?"
+    cmdIdentifyNum = 6
+    
+    Form1.MSComm1.Output = cmdBuf & vbCrLf
+    Log_Info cmdBuf
+End Sub

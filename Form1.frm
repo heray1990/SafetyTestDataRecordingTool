@@ -130,6 +130,7 @@ Option Explicit
 Dim strCommInput As String
 Dim lastRowNum As Integer
 Dim resArray() As String
+Dim stepArray() As String
 'i represent row while j represent column
 Dim i, j, cnt As Integer
 
@@ -207,6 +208,9 @@ On Error GoTo ErrExit
     DelayMS 500
     
     ASK_STEP_SNUM
+    DelayMS 500
+    
+    ASK_ALL_STEP_NAME
     DelayMS 500
     
     SAFE_STAR
@@ -323,6 +327,12 @@ On Error GoTo Err
                 sht.Cells(lastRowNum + 1, dateAndTimeColNum) = Date & vbCrLf & Time
                 
                 deInitExcelObj
+            Case 6
+                stepArray = Split(Trim(strCommInput), ",")
+                
+                For i = 1 To stepNum
+                    Log_Info "stepArray(" & Str(i - 1) & ") = " & stepArray(i - 1)
+                Next i
         End Select
     Else
         Exit Sub
