@@ -136,39 +136,51 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Dim strCommInput As String
+Dim lastRowNum As Integer
 
 Private Sub Command1_Click()
     'i represent row while j represent column
-    Dim i, j, cnt, lastRowNum As Integer
+    Dim i, j, cnt As Integer
    
     initExcelObj
     'Get the last row number of an existing sheet.
     lastRowNum = sht.UsedRange.Rows.Count
     
-    sht.Cells(lastRowNum + 1, 1) = "SN Num"
     With sht.Range(sht.Cells(lastRowNum + 1, 1), sht.Cells(lastRowNum + 2, 1))
         .HorizontalAlignment = xlCenter
         .VerticalAlignment = xlCenter
         .Merge
     End With
+    sht.Cells(lastRowNum + 1, SNColNum) = "SN Num"
     
     cnt = 1
     For i = lastRowNum + 1 To lastRowNum + 2
-        sht.Cells(i, 2) = cnt
-        sht.Cells(i, 2).HorizontalAlignment = xlCenter
-        sht.Cells(i, 2).VerticalAlignment = xlCenter
+        sht.Cells(i, stepNoColNum) = cnt
+        sht.Cells(i, stepNoColNum).HorizontalAlignment = xlCenter
+        sht.Cells(i, stepNoColNum).VerticalAlignment = xlCenter
         cnt = cnt + 1
     Next i
     
     cnt = 100
-    For i = lastRowNum + 1 To (lastRowNum + 2)
-        For j = 3 To 29
+    For i = lastRowNum + 1 To lastRowNum + 2
+        For j = 3 To 26
             sht.Cells(i, j) = cnt
             cnt = cnt + 1
         Next j
     Next i
     
-    'sht.Range(sht.Cells(21, 1), sht.Cells(21, 3)).Merge
+    With sht.Range(sht.Cells(lastRowNum + 1, judgeTotalColNum), sht.Cells(lastRowNum + 2, judgeTotalColNum))
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Merge
+    End With
+    
+    With sht.Range(sht.Cells(lastRowNum + 1, dateAndTimeColNum), sht.Cells(lastRowNum + 2, dateAndTimeColNum))
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Merge
+    End With
+    sht.Cells(lastRowNum + 1, dateAndTimeColNum) = Date & vbCrLf & Time
     
     deInitExcelObj
 End Sub
@@ -226,11 +238,18 @@ Private Sub subInitBeforeRunning()
     lbResult.BackColor = &HFFFFFF
     Log_Clear
     txtReceive.ForeColor = &H80000008
+    
+    initExcelObj
+    
+    'Get the last row number of an existing sheet.
+    lastRowNum = sht.UsedRange.Rows.Count
 End Sub
 
 Private Sub subInitAfterRunning()
     txtInput.Text = ""
     txtInput.SetFocus
+    
+    deInitExcelObj
 End Sub
 
 Private Sub subMainProcesser()
@@ -248,6 +267,7 @@ On Error GoTo ErrExit
     SAFE_STAR
     DelayMS 500
     
+    subInitAfterRunning
 ErrExit:
     'MsgBox Err.Description, vbCritical, Err.Source
     'MsgBox "subMainProcesser Error"
@@ -268,7 +288,7 @@ End Sub
 
 Private Sub textReceive()
     'i represent row while j represent column
-    Dim i, j, cnt, lastRowNum As Integer
+    Dim i, j, cnt As Integer
 
 On Error GoTo Err
     If Trim(strCommInput) <> "" And Trim(strCommInput) <> vbCr _
@@ -285,26 +305,35 @@ On Error GoTo Err
             Case 4
                 stepNum = Val(Mid(strCommInput, 2))
                 
-                initExcelObj
-                'Get the last row number of an existing sheet.
-                lastRowNum = sht.UsedRange.Rows.Count
-                
-                sht.Cells(lastRowNum + 1, 1) = strSerialNo
                 With sht.Range(sht.Cells(lastRowNum + 1, 1), sht.Cells(lastRowNum + stepNum, 1))
                     .HorizontalAlignment = xlCenter
                     .VerticalAlignment = xlCenter
                     .Merge
                 End With
+                sht.Cells(lastRowNum + 1, SNColNum) = strSerialNo
                 
                 cnt = 1
                 For i = lastRowNum + 1 To lastRowNum + stepNum
-                    sht.Cells(i, 2) = cnt
-                    sht.Cells(i, 2).HorizontalAlignment = xlCenter
-                    sht.Cells(i, 2).VerticalAlignment = xlCenter
+                    sht.Cells(i, stepNoColNum) = cnt
+                    sht.Cells(i, stepNoColNum).HorizontalAlignment = xlCenter
+                    sht.Cells(i, stepNoColNum).VerticalAlignment = xlCenter
                     cnt = cnt + 1
                 Next i
                 
-                deInitExcelObj
+                'Column "Total"
+                With sht.Range(sht.Cells(lastRowNum + 1, judgeTotalColNum), sht.Cells(lastRowNum + stepNum, judgeTotalColNum))
+                    .HorizontalAlignment = xlCenter
+                    .VerticalAlignment = xlCenter
+                    .Merge
+                End With
+                
+                'Column "Date & Time"
+                With sht.Range(sht.Cells(lastRowNum + 1, dateAndTimeColNum), sht.Cells(lastRowNum + stepNum, dateAndTimeColNum))
+                    .HorizontalAlignment = xlCenter
+                    .VerticalAlignment = xlCenter
+                    .Merge
+                End With
+                sht.Cells(lastRowNum + 1, dateAndTimeColNum) = Date & vbCrLf & Time
         End Select
     Else
         Exit Sub

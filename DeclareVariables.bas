@@ -14,6 +14,11 @@ Public stepNum As Integer
 
 Public cmdIdentifyNum As Integer
 
+Public Const SNColNum As Integer = 1
+Public Const stepNoColNum As Integer = 2
+Public Const judgeTotalColNum As Integer = 28
+Public Const dateAndTimeColNum As Integer = 29
+
 Public Sub Log_Clear()
     Form1.txtReceive.Text = ""
 End Sub
