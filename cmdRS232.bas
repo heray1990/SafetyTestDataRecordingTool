@@ -30,7 +30,7 @@ Public Sub SAFE_RES_AREP(flag As String)
     Log_Info cmdBuf
 End Sub
 
-Public Sub ASK_SAFE_SNUM()
+Public Sub ASK_STEP_SNUM()
     cmdBuf = "SAFE:SNUM?"
     cmdIdentifyNum = 4
     

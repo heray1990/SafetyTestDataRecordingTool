@@ -139,17 +139,30 @@ Dim strCommInput As String
 
 Private Sub Command1_Click()
     'i represent row while j represent column
-    Dim i, j, cnt As Integer
-    Dim t1, t2, t As Date
+    Dim i, j, cnt, lastRowNum As Integer
+   
+    initExcelObj
+    'Get the last row number of an existing sheet.
+    lastRowNum = sht.UsedRange.Rows.Count
     
-    t1 = Now
+    sht.Cells(lastRowNum + 1, 1) = "SN Num"
+    With sht.Range(sht.Cells(lastRowNum + 1, 1), sht.Cells(lastRowNum + 2, 1))
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .Merge
+    End With
     
-    executeExcel
-    Log_Info Str$(sht.UsedRange.Rows.Count)
-
+    cnt = 1
+    For i = lastRowNum + 1 To lastRowNum + 2
+        sht.Cells(i, 2) = cnt
+        sht.Cells(i, 2).HorizontalAlignment = xlCenter
+        sht.Cells(i, 2).VerticalAlignment = xlCenter
+        cnt = cnt + 1
+    Next i
+    
     cnt = 100
-    For i = sht.UsedRange.Rows.Count To (sht.UsedRange.Rows.Count + 2)
-        For j = 1 To 29
+    For i = lastRowNum + 1 To (lastRowNum + 2)
+        For j = 3 To 29
             sht.Cells(i, j) = cnt
             cnt = cnt + 1
         Next j
@@ -157,19 +170,7 @@ Private Sub Command1_Click()
     
     'sht.Range(sht.Cells(21, 1), sht.Cells(21, 3)).Merge
     
-    exl.ActiveWorkbook.Save
-    exl.ActiveWorkbook.Close
-    exl.Quit
-    
-    Set sht = Nothing
-    Set wb = Nothing
-    Set exl = Nothing
-    
-    t2 = Now
-    
-    t = t2 - t1
-    
-    MsgBox Second(t)
+    deInitExcelObj
 End Sub
 
 Private Sub Form_Load()
@@ -238,10 +239,10 @@ On Error GoTo ErrExit
     
     SAFE_STOP
     
-    SAFE_RES_AREP "ON"
+    SAFE_RES_AREP "OFF"
     DelayMS 500
     
-    ASK_SAFE_SNUM
+    ASK_STEP_SNUM
     DelayMS 500
     
     SAFE_STAR
@@ -266,6 +267,9 @@ Err:
 End Sub
 
 Private Sub textReceive()
+    'i represent row while j represent column
+    Dim i, j, cnt, lastRowNum As Integer
+
 On Error GoTo Err
     If Trim(strCommInput) <> "" And Trim(strCommInput) <> vbCr _
         And Trim(strCommInput) <> vbLf And Trim(strCommInput) <> vbCrLf Then
@@ -281,6 +285,26 @@ On Error GoTo Err
             Case 4
                 stepNum = Val(Mid(strCommInput, 2))
                 
+                initExcelObj
+                'Get the last row number of an existing sheet.
+                lastRowNum = sht.UsedRange.Rows.Count
+                
+                sht.Cells(lastRowNum + 1, 1) = strSerialNo
+                With sht.Range(sht.Cells(lastRowNum + 1, 1), sht.Cells(lastRowNum + stepNum, 1))
+                    .HorizontalAlignment = xlCenter
+                    .VerticalAlignment = xlCenter
+                    .Merge
+                End With
+                
+                cnt = 1
+                For i = lastRowNum + 1 To lastRowNum + stepNum
+                    sht.Cells(i, 2) = cnt
+                    sht.Cells(i, 2).HorizontalAlignment = xlCenter
+                    sht.Cells(i, 2).VerticalAlignment = xlCenter
+                    cnt = cnt + 1
+                Next i
+                
+                deInitExcelObj
         End Select
     Else
         Exit Sub
