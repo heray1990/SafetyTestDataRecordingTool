@@ -7,11 +7,6 @@ On Error GoTo ShowError
     START = Timer
     While (Timer - START) < (mmSec / 1000#)
         DoEvents
-
-                If IsStop = True Then
-                Exit Sub
-                End If
-   
     Wend
     Exit Sub
 ShowError:
@@ -27,10 +22,6 @@ On Error GoTo ShowError
     START = Timer
     While (Timer - START) < (mmSec / 1000#)
         DoEvents
-   
-        If IsStop = True Then
-            Exit Sub
-        End If
     Wend
     
     Exit Sub

@@ -30,9 +30,17 @@ Public Sub SAFE_RES_AREP(flag As String)
     Log_Info cmdBuf
 End Sub
 
+Public Sub SAFE_RES_AREP_ITEM(items As String)
+    cmdBuf = "SAFE:RES:AREP:ITEM" & Space(1) & items
+    cmdIdentifyNum = 4
+    
+    Form1.MSComm1.Output = cmdBuf & vbCrLf
+    Log_Info cmdBuf
+End Sub
+
 Public Sub ASK_STEP_SNUM()
     cmdBuf = "SAFE:SNUM?"
-    cmdIdentifyNum = 4
+    cmdIdentifyNum = 5
     
     Form1.MSComm1.Output = cmdBuf & vbCrLf
     Log_Info cmdBuf
