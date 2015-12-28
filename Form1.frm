@@ -131,6 +131,8 @@ Dim strCommInput As String
 Dim lastRowNum As Integer
 Dim resArray() As String
 Dim stepArray() As String
+Dim cmdBufStr As String
+Dim AC_Low, AC_High, DC_Low, DC_High, GB_Low, GB_High, IR_Low, IR_High, LC_Low, LC_High, OSC_Open, OSC_Short As String
 'i represent row while j represent column
 Dim i, j, cnt As Integer
 
@@ -211,6 +213,9 @@ On Error GoTo ErrExit
     DelayMS 500
     
     ASK_ALL_STEP_NAME
+    DelayMS 500
+    
+    ASK_ALL_STEP_SPEC cmdBufStr
     DelayMS 500
     
     SAFE_STAR
@@ -329,9 +334,45 @@ On Error GoTo Err
                 deInitExcelObj
             Case 6
                 stepArray = Split(Trim(strCommInput), ",")
+                cmdBufStr = ""
                 
                 For i = 1 To stepNum
                     Log_Info "stepArray(" & Str(i - 1) & ") = " & stepArray(i - 1)
+                    stepArray(i - 1) = Replace(stepArray(i - 1), Chr(13), "")
+                    stepArray(i - 1) = Replace(stepArray(i - 1), Chr(10), "")
+                    
+                    Select Case stepArray(i - 1)
+                        Case "AC"
+                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":AC:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":AC:LIM?"
+                            If Not i = stepNum Then
+                                cmdBufStr = cmdBufStr & ";" & vbCrLf
+                            End If
+                        Case "DC"
+                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":DC:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":DC:LIM?"
+                            If Not i = stepNum Then
+                                cmdBufStr = cmdBufStr & ";" & vbCrLf
+                            End If
+                        Case "GB"
+                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":GB:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":GB:LIM?"
+                            If Not i = stepNum Then
+                                cmdBufStr = cmdBufStr & ";" & vbCrLf
+                            End If
+                        Case "IR"
+                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":IR:LIM?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":IR:LIM:HIGH?"
+                            If Not i = stepNum Then
+                                cmdBufStr = cmdBufStr & ";" & vbCrLf
+                            End If
+                        Case "LC"
+                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":LC:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":LC:LIM?"
+                            If Not i = stepNum Then
+                                cmdBufStr = cmdBufStr & ";" & vbCrLf
+                            End If
+                        Case "OSC"
+                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":OSC:LIM:OPEN?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":OSC:LIM:SHOR?"
+                            If Not i = stepNum Then
+                                cmdBufStr = cmdBufStr & ";" & vbCrLf
+                            End If
+                    End Select
                 Next i
         End Select
     Else

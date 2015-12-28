@@ -53,3 +53,11 @@ Public Sub ASK_ALL_STEP_NAME()
     Form1.MSComm1.Output = cmdBuf & vbCrLf
     Log_Info cmdBuf
 End Sub
+
+Public Sub ASK_ALL_STEP_SPEC(bufStr As String)
+    cmdBuf = bufStr
+    cmdIdentifyNum = 7
+    
+    Form1.MSComm1.Output = cmdBuf & vbCrLf
+    Log_Info cmdBuf
+End Sub
