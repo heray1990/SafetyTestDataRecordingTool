@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{648A5603-2C6E-101B-82B6-000000000014}#1.1#0"; "MSCOMM32.OCX"
+Object = "{648A5603-2C6E-101B-82B6-000000000014}#1.1#0"; "mscomm32.ocx"
 Begin VB.Form Form1 
    Caption         =   "安规测试数据保存工具"
    ClientHeight    =   7215
@@ -138,46 +138,31 @@ Option Explicit
 Dim strCommInput As String
 
 Private Sub Command1_Click()
-    Dim rs As New ADODB.Recordset
     Dim i, j, cnt As Integer
     Dim exl As Object
     Dim wb As Object
     Dim sht As Object
-    Dim cn As New ADODB.Connection
     Dim t1, t2, t As Date
     
     t1 = Now
-    
-    rs.Fields.Append "R", adInteger
-    rs.Fields.Append "G", adInteger
-    rs.Fields.Append "B", adInteger
-    
+      
     Set exl = CreateObject("Excel.Application")
-    Set wb = exl.Workbooks.Add
+    Set wb = exl.Workbooks.Open(App.path & "\sample2.xls")
     Set sht = wb.ActiveSheet
     
     sht.Cells(1, 1) = "R"
     sht.Cells(1, 2) = "G"
     sht.Cells(1, 3) = "B"
     
-    cnt = 0
-    rs.Open
-    For i = 0 To 10
-        rs.AddNew
-        For j = 0 To 2
-            rs(j) = cnt
+    cnt = 100
+    For i = 2 To 20
+        For j = 1 To 3
+            sht.Cells(i, j) = cnt
             cnt = cnt + 1
         Next j
-        
-        rs.Update
     Next i
-    
-    sht.Cells(2, 1).CopyFromRecordset rs
-    
-    rs.Close
-    Set rs = Nothing
-    
-    exl.ActiveWorkbook.SaveAs App.path & "\sample2.xls"
+      
+    exl.ActiveWorkbook.Save
     exl.ActiveWorkbook.Close
     exl.Quit
     
