@@ -12,6 +12,8 @@ Public setData As Integer
 Public setDay As Integer
 Public stepNum As Integer
 
+Public cmdIdentifyNum As Integer
+
 Public Sub Log_Clear()
     Form1.txtReceive.Text = ""
 End Sub

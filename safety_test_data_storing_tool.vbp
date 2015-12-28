@@ -11,6 +11,7 @@ Module=Module2; DataBase.bas
 Module=Module3; DeclareVariables.bas
 Form=frmComPort.frm
 Module=Module4; cmdRS232.bas
+Module=dataToExcel; dataToExcel.bas
 IconForm="Form1"
 Startup="frmSplash"
 HelpFile=""

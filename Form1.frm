@@ -138,25 +138,18 @@ Option Explicit
 Dim strCommInput As String
 
 Private Sub Command1_Click()
+    'i represent row while j represent column
     Dim i, j, cnt As Integer
-    Dim exl As Object
-    Dim wb As Object
-    Dim sht As Object
     Dim t1, t2, t As Date
     
     t1 = Now
     
-    Set exl = CreateObject("Excel.Application")
-    Set wb = exl.Workbooks.Open(App.path & "\sample2.xls")
-    Set sht = wb.ActiveSheet
-    
-    'sht.Cells(1, 1) = "R"
-    'sht.Cells(1, 2) = "G"
-    'sht.Cells(1, 3) = "B"
-    
+    executeExcel
+    Log_Info Str$(sht.UsedRange.Rows.Count)
+
     cnt = 100
-    For i = 22 To 40
-        For j = 1 To 3
+    For i = sht.UsedRange.Rows.Count To (sht.UsedRange.Rows.Count + 2)
+        For j = 1 To 29
             sht.Cells(i, j) = cnt
             cnt = cnt + 1
         Next j
@@ -248,6 +241,9 @@ On Error GoTo ErrExit
     SAFE_RES_AREP "ON"
     DelayMS 500
     
+    ASK_SAFE_SNUM
+    DelayMS 500
+    
     SAFE_STAR
     DelayMS 500
     
@@ -270,18 +266,22 @@ Err:
 End Sub
 
 Private Sub textReceive()
-
 On Error GoTo Err
     If Trim(strCommInput) <> "" And Trim(strCommInput) <> vbCr _
         And Trim(strCommInput) <> vbLf And Trim(strCommInput) <> vbCrLf Then
         Log_Info strCommInput
-        If Trim(strCommInput) = """PASS""" & vbCrLf Or Trim(strCommInput) = """PASS""" & vbLf Then
-            Log_Info "Pass"
-            GoTo PASS
-        Else
-            Log_Info "Fail"
-            GoTo FAIL
-        End If
+        'If Trim(strCommInput) = """PASS""" & vbCrLf Or Trim(strCommInput) = """PASS""" & vbLf Then
+        '    Log_Info "Pass"
+        '    GoTo PASS
+        'Else
+        '    Log_Info "Fail"
+        '    GoTo FAIL
+        'End If
+        Select Case cmdIdentifyNum
+            Case 4
+                stepNum = Val(Mid(strCommInput, 2))
+                
+        End Select
     Else
         Exit Sub
     End If

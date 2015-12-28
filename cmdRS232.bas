@@ -8,24 +8,32 @@ Dim cmdBuf As String
 
 Public Sub SAFE_STAR()
     cmdBuf = "SAFE:STAR"
+    cmdIdentifyNum = 1
+    
     Form1.MSComm1.Output = cmdBuf & vbCrLf
     Log_Info cmdBuf
 End Sub
 
 Public Sub SAFE_STOP()
     cmdBuf = "SAFE:STOP"
+    cmdIdentifyNum = 2
+    
     Form1.MSComm1.Output = cmdBuf & vbCrLf
     Log_Info cmdBuf
 End Sub
 
 Public Sub SAFE_RES_AREP(flag As String)
     cmdBuf = "SAFE:RES:AREP" & Space(1) & flag
+    cmdIdentifyNum = 3
+    
     Form1.MSComm1.Output = cmdBuf & vbCrLf
     Log_Info cmdBuf
 End Sub
 
 Public Sub ASK_SAFE_SNUM()
     cmdBuf = "SAFE:SNUM?"
+    cmdIdentifyNum = 4
+    
     Form1.MSComm1.Output = cmdBuf & vbCrLf
     Log_Info cmdBuf
 End Sub
