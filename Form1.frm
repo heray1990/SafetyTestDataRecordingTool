@@ -129,6 +129,9 @@ Option Explicit
 
 Dim strCommInput As String
 Dim lastRowNum As Integer
+Dim resArray() As String
+'i represent row while j represent column
+Dim i, j, cnt As Integer
 
 
 Private Sub Form_Load()
@@ -229,9 +232,6 @@ Err:
 End Sub
 
 Private Sub textReceive()
-    'i represent row while j represent column
-    Dim i, j, cnt As Integer
-
 On Error GoTo Err
     If Trim(strCommInput) <> "" And Trim(strCommInput) <> vbCr _
         And Trim(strCommInput) <> vbLf And Trim(strCommInput) <> vbCrLf Then
@@ -246,6 +246,40 @@ On Error GoTo Err
         'End If
         
         Select Case cmdIdentifyNum
+            Case 1
+                initExcelObj
+                
+                resArray = Split(Trim(strCommInput), ",")
+                Log_Info "lastRowNum = " & Str$(lastRowNum) & ", stepNum = " & stepNum
+                
+                For i = 1 To stepNum
+                    Log_Info "i = " & Str$(i) & ", resArray() = " & resArray((i - 1) * 4)
+                    Select Case resArray((i - 1) * 4)
+                        Case "AC"
+                            Log_Info "i = " & Str$(i)
+                            sht.Cells(i + lastRowNum, AC_VtmColNum) = resArray(1 + (i - 1) * 4)
+                            sht.Cells(i + lastRowNum, AC_ImColNum) = resArray(2 + (i - 1) * 4)
+                            
+                            If resArray(3 + (j - 1) * 4) = "116" Then
+                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "PASS"
+                            Else
+                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "FAIL"
+                            End If
+                        Case "IR"
+                            Log_Info "i = " & Str$(i)
+                            sht.Cells(i + lastRowNum, IR_VtmColNum) = resArray(1 + (i - 1) * 4)
+                            sht.Cells(i + lastRowNum, IR_RmColNum) = resArray(2 + (i - 1) * 4)
+                            If resArray(3 + (j - 1) * 4) = "116" Then
+                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "PASS"
+                            Else
+                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "FAIL"
+                            End If
+                        Case Else
+                            Log_Info "Others"
+                    End Select
+                Next i
+                
+                deInitExcelObj
             Case 5
                 initExcelObj
     
@@ -305,6 +339,7 @@ FAIL:
 
 Err:
     Log_Info "Unknown message"
+
 End Sub
 
 Private Sub tbSetComPort_Click()
