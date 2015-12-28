@@ -250,26 +250,29 @@ On Error GoTo Err
                 initExcelObj
                 
                 resArray = Split(Trim(strCommInput), ",")
-                Log_Info "lastRowNum = " & Str$(lastRowNum) & ", stepNum = " & stepNum
                 
                 For i = 1 To stepNum
-                    Log_Info "i = " & Str$(i) & ", resArray() = " & resArray((i - 1) * 4)
                     Select Case resArray((i - 1) * 4)
                         Case "AC"
-                            Log_Info "i = " & Str$(i)
                             sht.Cells(i + lastRowNum, AC_VtmColNum) = resArray(1 + (i - 1) * 4)
                             sht.Cells(i + lastRowNum, AC_ImColNum) = resArray(2 + (i - 1) * 4)
+                            'Delete LF and CR in resArray(3 + (i - 1) * 4)
+                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(13), "")
+                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(10), "")
                             
-                            If resArray(3 + (j - 1) * 4) = "116" Then
+                            If resArray(3 + (i - 1) * 4) = "116" Then
                                 sht.Cells(i + lastRowNum, Judge_StepColNum) = "PASS"
                             Else
                                 sht.Cells(i + lastRowNum, Judge_StepColNum) = "FAIL"
                             End If
                         Case "IR"
-                            Log_Info "i = " & Str$(i)
                             sht.Cells(i + lastRowNum, IR_VtmColNum) = resArray(1 + (i - 1) * 4)
                             sht.Cells(i + lastRowNum, IR_RmColNum) = resArray(2 + (i - 1) * 4)
-                            If resArray(3 + (j - 1) * 4) = "116" Then
+                            'Delete LF and CR in resArray(3 + (i - 1) * 4)
+                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(13), "")
+                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(10), "")
+                            
+                            If resArray(3 + (i - 1) * 4) = "116" Then
                                 sht.Cells(i + lastRowNum, Judge_StepColNum) = "PASS"
                             Else
                                 sht.Cells(i + lastRowNum, Judge_StepColNum) = "FAIL"
