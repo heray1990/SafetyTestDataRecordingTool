@@ -145,26 +145,32 @@ Private Sub Command1_Click()
     Dim t1, t2, t As Date
     
     t1 = Now
-      
+    
     Set exl = CreateObject("Excel.Application")
     Set wb = exl.Workbooks.Open(App.path & "\sample2.xls")
     Set sht = wb.ActiveSheet
     
-    sht.Cells(1, 1) = "R"
-    sht.Cells(1, 2) = "G"
-    sht.Cells(1, 3) = "B"
+    'sht.Cells(1, 1) = "R"
+    'sht.Cells(1, 2) = "G"
+    'sht.Cells(1, 3) = "B"
     
     cnt = 100
-    For i = 2 To 20
+    For i = 22 To 40
         For j = 1 To 3
             sht.Cells(i, j) = cnt
             cnt = cnt + 1
         Next j
     Next i
-      
+    
+    'sht.Range(sht.Cells(21, 1), sht.Cells(21, 3)).Merge
+    
     exl.ActiveWorkbook.Save
     exl.ActiveWorkbook.Close
     exl.Quit
+    
+    Set sht = Nothing
+    Set wb = Nothing
+    Set exl = Nothing
     
     t2 = Now
     
