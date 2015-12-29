@@ -131,8 +131,9 @@ Dim strCommInput As String
 Dim lastRowNum As Integer
 Dim resArray() As String
 Dim stepArray() As String
+Dim stepSpecArray() As String
 Dim cmdBufStr As String
-Dim AC_Low, AC_High, DC_Low, DC_High, GB_Low, GB_High, IR_Low, IR_High, LC_Low, LC_High, OSC_Open, OSC_Short As String
+Dim isAllPass As Boolean
 'i represent row while j represent column
 Dim i, j, cnt As Integer
 
@@ -190,6 +191,9 @@ Private Sub subInitBeforeRunning()
     lbResult.BackColor = &HFFFFFF
     Log_Clear
     txtReceive.ForeColor = &H80000008
+    
+    cmdBufStr = ""
+    isAllPass = True
 End Sub
 
 Private Sub subInitAfterRunning()
@@ -246,14 +250,6 @@ On Error GoTo Err
         And Trim(strCommInput) <> vbLf And Trim(strCommInput) <> vbCrLf Then
         Log_Info strCommInput
         
-        'If Trim(strCommInput) = """PASS""" & vbCrLf Or Trim(strCommInput) = """PASS""" & vbLf Then
-        '    Log_Info "Pass"
-        '    GoTo PASS
-        'Else
-        '    Log_Info "Fail"
-        '    GoTo FAIL
-        'End If
-        
         Select Case cmdIdentifyNum
             Case 1
                 initExcelObj
@@ -261,37 +257,56 @@ On Error GoTo Err
                 resArray = Split(Trim(strCommInput), ",")
                 
                 For i = 1 To stepNum
+                    'Delete LF and CR after the last element resArray(3 + (i - 1) * 4).
+                    If i = stepNum Then
+                        resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(13), "")
+                        resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(10), "")
+                    End If
+
                     Select Case resArray((i - 1) * 4)
+                        Case "GB"
+                            sht.Cells(i + lastRowNum, GB_ItmColNum) = resArray(1 + (i - 1) * 4)
+                            sht.Cells(i + lastRowNum, GB_RmColNum) = resArray(2 + (i - 1) * 4)
                         Case "AC"
                             sht.Cells(i + lastRowNum, AC_VtmColNum) = resArray(1 + (i - 1) * 4)
                             sht.Cells(i + lastRowNum, AC_ImColNum) = resArray(2 + (i - 1) * 4)
-                            'Delete LF and CR in resArray(3 + (i - 1) * 4)
-                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(13), "")
-                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(10), "")
-                            
-                            If resArray(3 + (i - 1) * 4) = "116" Then
-                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "PASS"
-                            Else
-                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "FAIL"
-                            End If
+                        Case "DC"
+                            sht.Cells(i + lastRowNum, DC_VtmColNum) = resArray(1 + (i - 1) * 4)
+                            sht.Cells(i + lastRowNum, DC_ImColNum) = resArray(2 + (i - 1) * 4)
                         Case "IR"
                             sht.Cells(i + lastRowNum, IR_VtmColNum) = resArray(1 + (i - 1) * 4)
                             sht.Cells(i + lastRowNum, IR_RmColNum) = resArray(2 + (i - 1) * 4)
-                            'Delete LF and CR in resArray(3 + (i - 1) * 4)
-                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(13), "")
-                            resArray(3 + (i - 1) * 4) = Replace(resArray(3 + (i - 1) * 4), Chr(10), "")
-                            
-                            If resArray(3 + (i - 1) * 4) = "116" Then
-                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "PASS"
-                            Else
-                                sht.Cells(i + lastRowNum, Judge_StepColNum) = "FAIL"
-                            End If
+                        Case "LC"
+                            sht.Cells(i + lastRowNum, LC_VtmColNum) = resArray(1 + (i - 1) * 4)
+                            sht.Cells(i + lastRowNum, LC_ImColNum) = resArray(2 + (i - 1) * 4)
+                        Case "OSC"
+                            sht.Cells(i + lastRowNum, OSC_VtmColNum) = resArray(1 + (i - 1) * 4)
+                            sht.Cells(i + lastRowNum, OSC_CColNum) = resArray(2 + (i - 1) * 4)
                         Case Else
                             Log_Info "Others"
                     End Select
+                    
+                    'The result of each step.
+                    If resArray(3 + (i - 1) * 4) = "116" Then
+                        sht.Cells(i + lastRowNum, Judge_StepColNum) = "PASS"
+                        isAllPass = isAllPass And True
+                    Else
+                        sht.Cells(i + lastRowNum, Judge_StepColNum) = "FAIL"
+                        isAllPass = False
+                    End If
                 Next i
                 
-                deInitExcelObj
+                If isAllPass = True Then
+                    sht.Cells(1 + lastRowNum, Judge_TotalColNum) = "PASS"
+                    Log_Info "----PASS----"
+                    deInitExcelObj
+                    GoTo PASS
+                Else
+                    sht.Cells(1 + lastRowNum, Judge_TotalColNum) = "FAIL"
+                    Log_Info "----FAIL----"
+                    deInitExcelObj
+                    GoTo FAIL
+                End If
             Case 5
                 initExcelObj
     
@@ -338,10 +353,17 @@ On Error GoTo Err
                 
                 For i = 1 To stepNum
                     Log_Info "stepArray(" & Str(i - 1) & ") = " & stepArray(i - 1)
-                    stepArray(i - 1) = Replace(stepArray(i - 1), Chr(13), "")
-                    stepArray(i - 1) = Replace(stepArray(i - 1), Chr(10), "")
+                    If i = stepNum Then
+                        stepArray(i - 1) = Replace(stepArray(i - 1), Chr(13), "")
+                        stepArray(i - 1) = Replace(stepArray(i - 1), Chr(10), "")
+                    End If
                     
                     Select Case stepArray(i - 1)
+                        Case "GB"
+                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":GB:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":GB:LIM?"
+                            If Not i = stepNum Then
+                                cmdBufStr = cmdBufStr & ";" & vbCrLf
+                            End If
                         Case "AC"
                             cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":AC:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":AC:LIM?"
                             If Not i = stepNum Then
@@ -349,11 +371,6 @@ On Error GoTo Err
                             End If
                         Case "DC"
                             cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":DC:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":DC:LIM?"
-                            If Not i = stepNum Then
-                                cmdBufStr = cmdBufStr & ";" & vbCrLf
-                            End If
-                        Case "GB"
-                            cmdBufStr = cmdBufStr & "SAFE:STEP" & Str(i) & ":GB:LIM:LOW?;" & vbCrLf & "SAFE:STEP" & Str(i) & ":GB:LIM?"
                             If Not i = stepNum Then
                                 cmdBufStr = cmdBufStr & ";" & vbCrLf
                             End If
@@ -374,7 +391,52 @@ On Error GoTo Err
                             End If
                     End Select
                 Next i
+            Case 7
+                initExcelObj
+                
+                stepSpecArray = Split(Trim(strCommInput), ";")
+                
+                For i = 1 To stepNum * 2
+                    If i = stepNum * 2 Then
+                        stepSpecArray(i - 1) = Replace(stepSpecArray(i - 1), Chr(13), "")
+                        stepSpecArray(i - 1) = Replace(stepSpecArray(i - 1), Chr(10), "")
+                    End If
+                    
+                    If stepSpecArray(i - 1) = "+0.000000E+00" Then
+                        stepSpecArray(i - 1) = "0"
+                    End If
+                    
+                    Log_Info "stepSpecArray(" & Str(i - 1) & ") = " & stepSpecArray(i - 1)
+                Next i
+                
+                For i = 1 To stepNum
+                    'Log_Info "stepArray(" & Str(i - 1) & ") = " & stepArray(i - 1)
+                    Select Case stepArray(i - 1)
+                        Case "GB"
+                            sht.Cells(i + lastRowNum, GB_LowColNum) = stepSpecArray((i - 1) * 2)
+                            sht.Cells(i + lastRowNum, GB_HighColNum) = stepSpecArray(1 + (i - 1) * 2)
+                        Case "AC"
+                            sht.Cells(i + lastRowNum, AC_LowColNum) = stepSpecArray((i - 1) * 2)
+                            sht.Cells(i + lastRowNum, AC_HighColNum) = stepSpecArray(1 + (i - 1) * 2)
+                        Case "DC"
+                            sht.Cells(i + lastRowNum, DC_LowColNum) = stepSpecArray((i - 1) * 2)
+                            sht.Cells(i + lastRowNum, DC_HighColNum) = stepSpecArray(1 + (i - 1) * 2)
+                        Case "IR"
+                            sht.Cells(i + lastRowNum, IR_LowColNum) = stepSpecArray((i - 1) * 2)
+                            sht.Cells(i + lastRowNum, IR_HighColNum) = stepSpecArray(1 + (i - 1) * 2)
+                        Case "LC"
+                            sht.Cells(i + lastRowNum, LC_LowColNum) = stepSpecArray((i - 1) * 2)
+                            sht.Cells(i + lastRowNum, LC_HighColNum) = stepSpecArray(1 + (i - 1) * 2)
+                        Case "OSC"
+                            sht.Cells(i + lastRowNum, OSC_OpenColNum) = stepSpecArray((i - 1) * 2)
+                            sht.Cells(i + lastRowNum, OSC_ShortColNum) = stepSpecArray(1 + (i - 1) * 2)
+                    End Select
+                Next i
+                
+                deInitExcelObj
         End Select
+        
+        Exit Sub
     Else
         Exit Sub
     End If
