@@ -357,7 +357,7 @@ On Error GoTo Err
                 cmdBufStr = ""
                 
                 For i = 1 To stepNum
-                    Log_Info "stepArray(" & Str(i - 1) & ") = " & stepArray(i - 1)
+                    Log_Info "stepArray(" & CStr(i - 1) & ") = " & stepArray(i - 1)
                     If i = stepNum Then
                         stepArray(i - 1) = Replace(stepArray(i - 1), Chr(13), "")
                         stepArray(i - 1) = Replace(stepArray(i - 1), Chr(10), "")
@@ -411,11 +411,11 @@ On Error GoTo Err
                         stepSpecArray(i - 1) = "0"
                     End If
                     
-                    Log_Info "stepSpecArray(" & Str(i - 1) & ") = " & stepSpecArray(i - 1)
+                    Log_Info "stepSpecArray(" & CStr(i - 1) & ") = " & stepSpecArray(i - 1)
                 Next i
                 
                 For i = 1 To stepNum
-                    'Log_Info "stepArray(" & Str(i - 1) & ") = " & stepArray(i - 1)
+                    'Log_Info "stepArray(" & CStr(i - 1) & ") = " & stepArray(i - 1)
                     Select Case stepArray(i - 1)
                         Case "GB"
                             sht.Cells(i + lastRowNum, GB_LowColNum) = stepSpecArray((i - 1) * 2)
