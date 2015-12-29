@@ -5,10 +5,10 @@ Begin VB.Form Form1
    ClientHeight    =   7215
    ClientLeft      =   165
    ClientTop       =   855
-   ClientWidth     =   5550
+   ClientWidth     =   5535
    LinkTopic       =   "Form1"
    ScaleHeight     =   7215
-   ScaleWidth      =   5550
+   ScaleWidth      =   5535
    StartUpPosition =   3  '´°¿ÚÈ±Ê¡
    Begin VB.Timer Timer1 
       Left            =   6480
@@ -133,6 +133,7 @@ Dim resArray() As String
 Dim stepArray() As String
 Dim stepSpecArray() As String
 Dim cmdBufStr As String
+Dim tmpStr As String
 Dim isAllPass As Boolean
 'i represent row while j represent column
 Dim i, j, cnt As Integer
@@ -193,6 +194,7 @@ Private Sub subInitBeforeRunning()
     txtReceive.ForeColor = &H80000008
     
     cmdBufStr = ""
+    tmpStr = ""
     isAllPass = True
 End Sub
 
@@ -302,8 +304,11 @@ On Error GoTo Err
                     deInitExcelObj
                     GoTo PASS
                 Else
-                    sht.Cells(1 + lastRowNum, Judge_TotalColNum) = "FAIL"
+                    'sht.Cells(1 + lastRowNum, Judge_TotalColNum) = "FAIL"
                     Log_Info "----FAIL----"
+                    tmpStr = CStr(1 + lastRowNum) & ":" & CStr(stepNum + lastRowNum)
+                    Log_Info tmpStr
+                    sht.Rows(tmpStr).Delete Shift:=xlUp
                     deInitExcelObj
                     GoTo FAIL
                 End If
@@ -314,7 +319,7 @@ On Error GoTo Err
                 'Get the last row number of an existing sheet.
                 lastRowNum = sht.UsedRange.Rows.Count
 
-                Log_Info "Step number is " & Str$(stepNum) & ". Last row number is " & Str$(lastRowNum)
+                Log_Info "Step number is " & CStr(stepNum) & ". Last row number is " & CStr(lastRowNum)
                 
                 With sht.Range(sht.Cells(lastRowNum + 1, 1), sht.Cells(lastRowNum + stepNum, 1))
                     .HorizontalAlignment = xlCenter
