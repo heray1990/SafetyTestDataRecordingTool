@@ -145,6 +145,7 @@ Private Sub Form_Load()
     subInitInterface
 
     lbModelName = strCurrentModelName
+    txtInput.Locked = False
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -196,11 +197,14 @@ Private Sub subInitBeforeRunning()
     cmdBufStr = ""
     tmpStr = ""
     isAllPass = True
+    txtInput.Locked = True
 End Sub
 
 Private Sub subInitAfterRunning()
     txtInput.Text = ""
     txtInput.SetFocus
+    
+    txtInput.Locked = False
 End Sub
 
 Private Sub subMainProcesser()
@@ -227,7 +231,7 @@ On Error GoTo ErrExit
     SAFE_STAR
     DelayMS 500
     
-    subInitAfterRunning
+    'subInitAfterRunning
 ErrExit:
     'MsgBox Err.Description, vbCritical, Err.Source
     'MsgBox "subMainProcesser Error"
@@ -470,6 +474,8 @@ End Sub
 Private Sub txtInput_KeyPress(KeyAscii As Integer)
     'ASCII = 13 means "Enter" of keyboard.
     If KeyAscii = 13 Then
-        subMainProcesser
+        If txtInput.Locked = False Then
+            subMainProcesser
+        End If
     End If
 End Sub
