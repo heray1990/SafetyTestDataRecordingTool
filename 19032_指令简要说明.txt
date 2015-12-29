@@ -66,5 +66,38 @@ SAFE:STEP 2:IR:TIME 15
 SAFE:PRES:TIME:STEP 0.5
 设定 STEP 之间的时间间隔为 0.5s
 
+SAFE:STEP N:AC:LIM?
+询问 STEP N 交流耐压漏电电流上限值
 
+SAFE:STEP N:AC:LIM:LOW?
+询问 STEP N 交流耐压漏电电流下限值
 
+SAFE:STEP N:DC:LIM?
+询问 STEP N 直流耐压漏电电流上限值
+
+SAFE:STEP N:DC:LIM:LOW?
+询问 STEP N 直流耐压漏电电流下限值
+
+SAFE:STEP N:IR:LIM:HIGH?
+询问 STEP N 绝缘电阻上限值
+
+SAFE:STEP N:IR:LIM?
+询问 STEP N 绝缘电阻下限值
+
+SAFE:STEP N:GB:LIM?
+询问 STEP N 接地电阻上限值
+
+SAFE:STEP N:GB:LIM:LOW?
+询问 STEP N 接地电阻下限值
+
+SAFE:STEP N:LC:LIM?
+询问 STEP N 漏电电流上限值
+
+SAFE:STEP N:LC:LIM:LOW?
+询问 STEP N 漏电电流下限值
+
+SAFE:STEP N:OSC:LIM:OPEN?
+询问 STEP N 断开路侦测时，开路判断所设定的百分比
+
+SAFE:STEP N:OSC:LIM:SHOR?
+询问 STEP N 断开路侦测时，短路判断所设定的百分比
