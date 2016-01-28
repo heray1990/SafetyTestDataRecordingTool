@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{648A5603-2C6E-101B-82B6-000000000014}#1.1#0"; "mscomm32.ocx"
+Object = "{648A5603-2C6E-101B-82B6-000000000014}#1.1#0"; "MSCOMM32.OCX"
 Begin VB.Form Form1 
    Caption         =   "安规测试数据保存工具"
    ClientHeight    =   7215
@@ -9,7 +9,7 @@ Begin VB.Form Form1
    LinkTopic       =   "Form1"
    ScaleHeight     =   7215
    ScaleWidth      =   5535
-   StartUpPosition =   3  '窗口缺省
+   StartUpPosition =   3  'Windows Default
    Begin VB.Timer Timer1 
       Left            =   6480
       Top             =   360
@@ -198,6 +198,7 @@ Private Sub subInitBeforeRunning()
     tmpStr = ""
     isAllPass = True
     txtInput.Locked = True
+    txtReceive.SetFocus
 End Sub
 
 Private Sub subInitAfterRunning()
