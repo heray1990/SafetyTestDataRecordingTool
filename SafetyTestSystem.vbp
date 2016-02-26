@@ -15,10 +15,10 @@ Module=Module5; dataToExcel.bas
 IconForm="Form1"
 Startup="frmSplash"
 HelpFile=""
-Title="safety_test_data_storing_tool"
+Title="SafetyTestSystem"
 ExeName32="safety_test_data_storing_tool_V0.0.1.exe"
 Command32=""
-Name="safety_test_data_storing_tool"
+Name="SafetyTestSystem"
 HelpContextID="0"
 CompatibleMode="0"
 MajorVer=0
@@ -42,6 +42,7 @@ Unattended=0
 Retained=0
 ThreadPerObject=0
 MaxNumberOfThreads=1
+DebugStartupOption=0
 
 [MS Transaction Server]
 AutoRefresh=1

@@ -215,22 +215,16 @@ On Error GoTo ErrExit
     SAFE_STOP
     
     SAFE_RES_AREP "ON"
-    DelayMS 500
     
     SAFE_RES_AREP_ITEM "STAT,MODE,OMET,MMET"
-    DelayMS 500
     
     ASK_STEP_SNUM
-    DelayMS 500
     
     ASK_ALL_STEP_NAME
-    DelayMS 500
     
     ASK_ALL_STEP_SPEC cmdBufStr
-    DelayMS 500
     
     SAFE_STAR
-    DelayMS 500
     
     'subInitAfterRunning
 ErrExit:
