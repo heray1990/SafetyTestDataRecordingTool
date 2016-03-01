@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setting>
+	<current_project>Letv-X65</current_project>
+	<project_list>
+		<project brand="Letv" model="X65"/>
+		<project brand="Letv" model="X50"/>
+		<project brand="CIBN" model="C49S"/>
+	</project_list>
+	<common baud="9600" id="1"/>
+</setting>

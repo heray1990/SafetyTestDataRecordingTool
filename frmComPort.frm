@@ -1,5 +1,5 @@
 VERSION 5.00
-Begin VB.Form Form2 
+Begin VB.Form frmComPort 
    Caption         =   "设置串口"
    ClientHeight    =   1935
    ClientLeft      =   120
@@ -9,7 +9,7 @@ Begin VB.Form Form2
    MaxButton       =   0   'False
    ScaleHeight     =   1935
    ScaleWidth      =   3735
-   StartUpPosition =   3  '窗口缺省
+   StartUpPosition =   3  'Windows Default
    Begin VB.Frame Frame1 
       Caption         =   "ComSet"
       ForeColor       =   &H00FF0000&
@@ -81,11 +81,12 @@ Begin VB.Form Form2
       End
    End
 End
-Attribute VB_Name = "Form2"
+Attribute VB_Name = "frmComPort"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Option Explicit
 
 Private Sub cmdExit_Click()
     Unload Me
@@ -106,25 +107,8 @@ On Error GoTo ErrExit
  
     setTVCurrentComBaud = Val(cmbTbaud)
     
-    sqlstring = "select * from CommonTable where Mark='ATS'"
-    Executesql (sqlstring)
-    
-    rs.Fields(2) = setTVCurrentComID                       'ComID
-    rs.Update
-    
-    Set cn = Nothing
-    Set rs = Nothing
-    sqlstring = ""
-
-    If Form1.MSComm1.PortOpen = True Then
-        Form1.MSComm1.PortOpen = False
-    End If
-
-With Form1
-    .MSComm1.CommPort = setTVCurrentComID
-    .MSComm1.Settings = setTVCurrentComBaud & ",N,8,1"
-    .MSComm1.PortOpen = True
-End With
+    SaveComBaud CStr(setTVCurrentComBaud)
+    SaveComId CStr(setTVCurrentComID)
 
     Unload Me
     Form1.ZOrder (0)
@@ -136,14 +120,15 @@ ErrExit:
 End Sub
 
 Private Sub Form_Load()
-
 On Error GoTo ErrExit
 
-    cmbTcomID.Text = "COM" & setTVCurrentComID
-    cmbTbaud.Text = setTVCurrentComBaud
+    Dim i As Integer
+
+    cmbTcomID.Text = "COM" & CStr(setTVCurrentComID)
+    cmbTbaud.Text = CStr(setTVCurrentComBaud)
 
     For i = 1 To 20
-        cmbTcomID.AddItem "COM" & i
+        cmbTcomID.AddItem "COM" & CStr(i)
     Next i
 
     'Chroma 19032 only support the following baud. Recommend use 9600.

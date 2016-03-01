@@ -140,11 +140,10 @@ Dim i, j, cnt As Integer
 
 
 Private Sub Form_Load()
-    setTVCurrentComBaud = 9600
     subInitComPort
     subInitInterface
 
-    lbModelName = strCurrentModelName
+    lbModelName = gstrCurProjName
     txtInput.Locked = False
 End Sub
 
@@ -164,21 +163,32 @@ ErrExit:
 End Sub
 
 Private Sub subInitComPort()
-    sqlstring = "select * from CommonTable where Mark='ATS'"
-    Executesql (sqlstring)
-
-    If rs.EOF = False Then
-        setTVCurrentComID = rs("ComID")
-    Else
-        MsgBox "Read Data Error,Please Check Your Database!", vbOKOnly + vbInformation, "Warning!"
-    End
+On Error GoTo ErrExit
+ 
+    If MSComm1.PortOpen = True Then
+        MSComm1.PortOpen = False
     End If
 
-    Set cn = Nothing
-    Set rs = Nothing
-    sqlstring = ""
+    MSComm1.CommPort = setTVCurrentComID
+    MSComm1.Settings = setTVCurrentComBaud & ",N,8,1"
+    MSComm1.InputLen = 0
+        
+    MSComm1.InBufferCount = 0
+    MSComm1.OutBufferCount = 0
+    MSComm1.InputMode = comInputModeText
+        
+    MSComm1.NullDiscard = False
+    MSComm1.DTREnable = False
+    MSComm1.EOFEnable = False
+    MSComm1.RTSEnable = False
+    MSComm1.SThreshold = 1
+    MSComm1.RThreshold = 1
+    MSComm1.InBufferSize = 1024
+    MSComm1.OutBufferSize = 512
+    Exit Sub
 
-    ComInit
+ErrExit:
+        MsgBox Err.Description, vbCritical, Err.Source
 End Sub
 
 Private Sub subInitInterface()
@@ -463,14 +473,25 @@ Err:
 End Sub
 
 Private Sub tbSetComPort_Click()
-    Form2.Show
+    frmComPort.Show
 End Sub
 
 Private Sub txtInput_KeyPress(KeyAscii As Integer)
+On Error GoTo ErrExit
     'ASCII = 13 means "Enter" of keyboard.
     If KeyAscii = 13 Then
         If txtInput.Locked = False Then
+            If MSComm1.PortOpen = False Then
+                MSComm1.PortOpen = True
+            End If
             subMainProcesser
         End If
+    End If
+    Exit Sub
+
+ErrExit:
+    'Invalid Port Number
+    If Err.Number = 8002 Then
+        MsgBox Err.Description, vbCritical, Err.Source
     End If
 End Sub

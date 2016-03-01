@@ -16,7 +16,7 @@ Begin VB.Form frmSplash
    ScaleHeight     =   2190
    ScaleWidth      =   4020
    ShowInTaskbar   =   0   'False
-   StartUpPosition =   2  'ÆÁÄ»ÖÐÐÄ
+   StartUpPosition =   2  'CenterScreen
    Begin VB.ComboBox cmbModelName 
       BackColor       =   &H00E0E0E0&
       BeginProperty Font 
@@ -126,91 +126,33 @@ End Sub
 Private Sub Form_Load()
 
 On Error GoTo ErrExit
-    ss = False
+    Dim strProjectName As Variant
+    
+    cmbModelName.Clear
+    
+    For Each strProjectName In GetProjectList
+        cmbModelName.AddItem strProjectName
+    Next strProjectName
 
+    setTVCurrentComBaud = LoadComBaud
+    setTVCurrentComID = LoadComId
+    cmbModelName.Text = GetCurProjectName
+    
     lblVersion.Caption = "Version " & App.Major & "." & App.Minor & "." & App.Revision
- 
-    sqlstring = "select * from settingTable"
-    Executesql (sqlstring)
-
-    If rs.EOF = False Then
-        rs.MoveFirst
-        cmbModelName.Clear
-
-        Do While Not rs.EOF
-            cmbModelName.AddItem rs.Fields("Mark")
-            rs.MoveNext
-        Loop
-    Else
-        MsgBox "Read Data Error,Please Check Your Database!", vbOKOnly + vbInformation, "Warning!"
-        End
-    End If
     
-    Set cn = Nothing
-    Set rs = Nothing
-    sqlstring = ""
-    
-    sqlstring = "select * from CommonTable where Mark='ATS'"
-    Executesql (sqlstring)
-    
-    If rs.EOF = False Then
-        strCurrentModelName = rs("CurrentModelName")
-        strDataVersion = rs("DataVersion")
-        setTVCurrentComID = rs("ComID")
-        setData = rs("Date")
-        setDay = rs("Day")
-    Else
-        MsgBox "Read Data Error,Please Check Your Database!", vbOKOnly + vbInformation, "Warning!"
-    End If
-    
-    Set cn = Nothing
-    Set rs = Nothing
-
-    sqlstring = ""
-    cmbModelName = strCurrentModelName
-
-    If setData <> Day(Date) Then
-        sqlstring = "select * from CommonTable where Mark='ATS'"
-        Executesql (sqlstring)
-        rs.Fields(4) = Day(Date)
-        rs.Fields(5) = setDay + 1
-        rs.Update
-
-        Set cn = Nothing
-        Set rs = Nothing
-        sqlstring = ""
-    End If
     Exit Sub
     
 ErrExit:
-       MsgBox Err.Description, vbCritical, Err.Source
-       
+    MsgBox Err.Description, vbCritical, Err.Source
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
 
 On Error GoTo ErrExit
-
-    strCurrentModelName = cmbModelName
-    sqlstring = ""
-    sqlstring = "update CommonTable set CurrentModelName='" & strCurrentModelName & "' where Mark='ATS'"
-    Executesql (sqlstring)
-    
-    Set cn = Nothing
-    Set rs = Nothing
-    sqlstring = ""
-    
-    sqlstring = "select * from settingTable where Mark='" & strCurrentModelName & "'"
-    Executesql (sqlstring)
-
-    setTVCurrentComBaud = rs("ComBaud")
-
-    Set rs = Nothing
-    Set cn = Nothing
-    sqlstring = ""
+    gstrCurProjName = cmbModelName.Text
+    SetCurProjectName gstrCurProjName
 
     Form1.Show
-
     Exit Sub
     
 ErrExit:

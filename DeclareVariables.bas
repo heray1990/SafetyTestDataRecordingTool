@@ -1,8 +1,8 @@
-Attribute VB_Name = "Module3"
+Attribute VB_Name = "DeclareVariables"
 Option Explicit
 
 
-Public strCurrentModelName As String
+Public gstrCurProjName As String
 Public setTVCurrentComBaud As Long
 Public strDataVersion As String
 Public strSerialNo As String
