@@ -490,6 +490,7 @@ On Error GoTo ErrExit
     Exit Sub
 
 ErrExit:
+    txtInput.Text = ""
     'Invalid Port Number
     If Err.Number = 8002 Then
         MsgBox Err.Description, vbCritical, Err.Source
