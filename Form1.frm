@@ -6,10 +6,11 @@ Begin VB.Form Form1
    ClientLeft      =   165
    ClientTop       =   855
    ClientWidth     =   5535
+   Icon            =   "Form1.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   7215
    ScaleWidth      =   5535
-   StartUpPosition =   3  'Windows Default
+   StartUpPosition =   2  'CenterScreen
    Begin VB.Timer Timer1 
       Left            =   6480
       Top             =   360
@@ -209,6 +210,8 @@ Private Sub subInitBeforeRunning()
     isAllPass = True
     txtInput.Locked = True
     txtReceive.SetFocus
+    
+    initExcelObj
 End Sub
 
 Private Sub subInitAfterRunning()
@@ -216,6 +219,8 @@ Private Sub subInitAfterRunning()
     txtInput.SetFocus
     
     txtInput.Locked = False
+    
+    deInitExcelObj
 End Sub
 
 Private Sub subMainProcesser()
@@ -251,8 +256,9 @@ On Error GoTo Err
             Call textReceive
         'Case comEvSend
     End Select
+    Exit Sub
 Err:
-    'MsgBox "MSComm1_OnComm Error"
+    MsgBox "MSComm1_OnComm Error"
 End Sub
 
 Private Sub textReceive()
@@ -263,7 +269,7 @@ On Error GoTo Err
         
         Select Case cmdIdentifyNum
             Case 1
-                initExcelObj
+                'initExcelObj
                 
                 resArray = Split(Trim(strCommInput), ",")
                 
@@ -310,7 +316,7 @@ On Error GoTo Err
                 If isAllPass = True Then
                     sht.Cells(1 + lastRowNum, Judge_TotalColNum) = "PASS"
                     Log_Info "----PASS----"
-                    deInitExcelObj
+                    'deInitExcelObj
                     GoTo PASS
                 Else
                     'sht.Cells(1 + lastRowNum, Judge_TotalColNum) = "FAIL"
@@ -318,11 +324,11 @@ On Error GoTo Err
                     tmpStr = CStr(1 + lastRowNum) & ":" & CStr(stepNum + lastRowNum)
                     Log_Info tmpStr
                     sht.Rows(tmpStr).Delete Shift:=xlUp
-                    deInitExcelObj
+                    'deInitExcelObj
                     GoTo FAIL
                 End If
             Case 5
-                initExcelObj
+                'initExcelObj
     
                 stepNum = Val(Mid(strCommInput, 2))
                 'Get the last row number of an existing sheet.
@@ -360,7 +366,7 @@ On Error GoTo Err
                 End With
                 sht.Cells(lastRowNum + 1, dateAndTimeColNum) = Date & vbCrLf & Time
                 
-                deInitExcelObj
+                'deInitExcelObj
             Case 6
                 stepArray = Split(Trim(strCommInput), ",")
                 cmdBufStr = ""
@@ -406,7 +412,7 @@ On Error GoTo Err
                     End Select
                 Next i
             Case 7
-                initExcelObj
+                'initExcelObj
                 
                 stepSpecArray = Split(Trim(strCommInput), ";")
                 
@@ -447,7 +453,7 @@ On Error GoTo Err
                     End Select
                 Next i
                 
-                deInitExcelObj
+                'deInitExcelObj
         End Select
         
         Exit Sub

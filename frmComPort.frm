@@ -5,6 +5,7 @@ Begin VB.Form frmComPort
    ClientLeft      =   120
    ClientTop       =   450
    ClientWidth     =   3735
+   Icon            =   "frmComPort.frx":0000
    LinkTopic       =   "Form2"
    MaxButton       =   0   'False
    ScaleHeight     =   1935
@@ -52,9 +53,9 @@ Begin VB.Form frmComPort
          End
          Begin VB.ComboBox cmbTcomID 
             Height          =   300
-            ItemData        =   "frmComPort.frx":0000
+            ItemData        =   "frmComPort.frx":440A
             Left            =   960
-            List            =   "frmComPort.frx":0002
+            List            =   "frmComPort.frx":440C
             TabIndex        =   2
             Text            =   "COM1"
             Top             =   360

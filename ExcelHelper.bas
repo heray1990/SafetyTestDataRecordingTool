@@ -6,6 +6,8 @@ Public wb As Object
 Public sht As Object
 
 Public Function initExcelObj()
+    Application.DisplayAlerts = False
+
     Set exl = CreateObject("Excel.Application")
     Set wb = exl.Workbooks.Open(App.Path & "\data.xls")
     Set sht = wb.ActiveSheet
@@ -19,4 +21,6 @@ Public Function deInitExcelObj()
     Set sht = Nothing
     Set wb = Nothing
     Set exl = Nothing
+    
+    Application.DisplayAlerts = True
 End Function
